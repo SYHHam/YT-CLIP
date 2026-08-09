@@ -1,0 +1,34 @@
+[build]
+  publish = "public"
+  command = "npm install --production=false"
+  functions = "netlify/functions"
+
+# Redirect semua /api/* ke Netlify Functions
+[[redirects]]
+  from = "/api/info"
+  to = "/.netlify/functions/info"
+  status = 200
+
+[[redirects]]
+  from = "/api/download"
+  to = "/.netlify/functions/download"
+  status = 200
+
+[[redirects]]
+  from = "/api/transcript"
+  to = "/.netlify/functions/transcript"
+  status = 200
+
+# SPA fallback
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+[functions]
+  node_bundler = "esbuild"
+  external_node_modules = ["ffmpeg-static", "@distube/ytdl-core", "fluent-ffmpeg"]
+
+# NOTE: ffmpeg-static binary ~70MB mungkin melebihi batas Netlify Functions (50MB zipped).
+# Jika gagal deploy, hapus `ffmpeg-static` dari external_node_modules dan gunakan
+# layer ffmpeg khusus Netlify (lihat README).
